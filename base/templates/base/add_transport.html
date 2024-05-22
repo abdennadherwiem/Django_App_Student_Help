@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter un transport</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('/static/images/graph.webp');
+            background-size: cover; /* Pour couvrir tout l'écran */
+            background-position: center; /* Pour centrer l'image */
+            text-align: center;
+            padding-top: 50px;
+        }
+        h1 {
+            color: #9a35dd;
+            font-size: 36px;
+            margin-bottom: 30px;
+        }
+        form {
+            background-color: rgba(255, 255, 255, 0);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            width: 400px;
+            max-width: 90%;
+            margin: 0 auto; /* Center horizontally */
+            position: relative; /* Permet de positionner l'image par rapport au formulaire */
+        }
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: bold;
+        }
+        input[type="text"],
+        textarea,
+        select {
+            width: calc(100% - 22px); /* Largeur ajustée pour compenser la bordure */
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button {
+            background: linear-gradient(to right, #9a35dd, #623dc6);
+            color: #ffffff;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #4c0672;
+        }
+        .form-image {
+            position: absolute; /* Position absolue par rapport au formulaire */
+            top: 0;
+            right: 0;
+            width: 200px; /* Taille de l'image */
+            height: auto;
+            border-radius: 0 8px 8px 0; /* Coins arrondis seulement à droite */
+            box-shadow: -5px 0 10px rgba(0, 0, 0, 0.1); /* Ombre à gauche de l'image */
+
+
+
+        }
+
+
+        input[type="number"] {
+        width: calc(100% - 22px); /* Largeur ajustée pour compenser la bordure */
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+    </style>
+</head>
+<body>
+    <h1 style=" color: linear-gradient(to right, #9a35dd, #623dc6);">Ajouter un transport</h1>
+    
+    <form method="post">
+        {% csrf_token %}
+        <label for="id_depart">Départ:</label>
+        {{ form.depart }}
+        <label for="id_destination">Destination:</label>
+        {{ form.destination }}
+        <label for="id_heure_depart">Heure de Départ:</label>
+        {{ form.heure_depart }}
+        <label for="id_nombre_sieges">Nombre de Sièges:</label>
+        {{ form.nombre_sieges }}
+        <label for="id_contact_info">Contact:</label>
+        {{ form.contact_info }}
+        <button type="submit">Ajouter</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,695 @@
+<!-- {% extends 'main.html' %} -->
+{% load static %} 
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'styles/home.scss' %}" />
+
+<!-- Icons -->
+<link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css">
+
+ <!-- Font-awesome -->
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+ <style>
+  
+  #heart.red {
+    color: red;
+
+  .custom-dropdown-menu {
+  background-color: white;
+}
+
+/* Define custom classes to adjust the size of the icons */
+.delete-icon,
+.pencil-icon {
+    font-size: 50px; /* Adjust the font size as needed */
+    width: 500px;
+    height: 1000px;
+   
+  margin-top: 100px;
+}
+
+/* Style for the delete button */
+.delete-button {
+   
+    border: none;
+    cursor: pointer;
+    width: 1000px;
+    height: 1000px;
+
+   
+}
+
+  }
+
+
+  .search-bar.hidden {
+        display: none;
+    }
+
+    
+.btn-reserver {
+    
+  
+    padding: 3px 3px;
+    border: none;
+    
+    cursor: pointer;
+   
+    font-size: 10px;
+    margin-top: -4px;
+    margin-right: 1px;
+}
+
+
+
+
+#privateMessages {
+            display: none;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 2px;
+            background-color: #fff;
+            width: 300px;  /* Largeur minimale */
+            height: 400px; /* Hauteur minimale */
+            overflow-y: auto; /* Barre de défilement verticale */
+            position: fixed; /* Position fixe */
+            bottom: 250px; /* Décalage vers le bas */
+            right: 40px;  /* Décalage vers la droite */
+            z-index: 1000; 
+           
+        }
+
+        #privateMessages div {
+            border-bottom: 1px solid #eee;
+            padding: 10px;
+        }
+
+        #privateMessages div:last-child {
+            border-bottom: none;
+        }
+
+
+
+
+
+
+        
+
+
+ </style>
+
+{% endblock %}
+
+<!-- Title -->
+{% block title %}
+<title>Dashboard</title>
+{% endblock %}
+
+{% block content %} 
+<nav style="background-color: rgb(107,76,230);">
+  <div class="container" >
+    <div class="log">
+      <img src="{% static 'images/home/iset_logo.png' %}" style="height:75px;cursor:pointer;">
+    </div>
+
+    <!-- Search bar -->
+   
+    
+      <form action="{% url 'home' %}" method="GET">
+        {% csrf_token %}
+        <div class="search-bar">
+            <input type="search" placeholder="Search for Posts" name="q">
+            <button type="submit"><i class="uil uil-search"></i> </button> 
+        </div>
+        </form>
+
+      
+
+
+      <div class="create">
+        {% if user.is_authenticated %}
+        <a href="{% url 'logout' %}" style="color: #fff;text-decoration: none;" >logout</a>
+        {% else %}
+       <a href="{% url 'signup' %}">Signup</a>
+      <a href="{% url 'login' %}">Login</a>
+       {% endif %}
+        <!--- <button class="btn btn-primary">
+            <a href="{% url 'add_post' %}" style="color: #fff;text-decoration: none;">Create Post</a>
+         </button>-->
+
+         <button id="showMessagesButton" style="background-color: transparent;">
+
+
+          <img src="https://cdn-icons-png.flaticon.com/512/5356/5356190.png" alt="Description_de_l_image" id="showMessages" style="width: 50px; height: 50px;">
+        </button>
+
+         <a href="{% url 'send_private_message' %}"><img src=" https://cdn.icon-icons.com/icons2/2018/PNG/512/friends_link_send_share_icon_123609.png" style="width:50px;height: 50px;"></a>
+
+
+        
+         <button class="btn btn-primary">
+          <a href="{% url 'create_post_and_stage' %}" style="color: #fff;text-decoration: none;">Create Post</a>
+       </button>
+          <div class="profile-photo" style="cursor:pointer;">
+            <a class="profile" href="{% url 'show_profile_page' user.profile.id %}" style="text-decoration: none;">
+           <img src="{{user_profile.profileimg.url}}" alt="profile-photo">
+            </a>
+         </div>
+      </div>
+  </div>
+</nav>
+
+
+
+
+<div id="privateMessages">
+  <h4 style="color:rgb(107,76,230)">Private Messages</h4>
+
+  
+  {% if messages %}
+      <ul>
+          {% for message in messages %}
+              <li style="margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                  <p><strong>From:</strong> {{ message.sender }}</p>
+                  <p><strong>Message:</strong> {{ message.message }}</p>
+                  <p><strong>Sent:</strong> {{ message.timestamp }}</p>
+              </li>
+          {% endfor %}
+      </ul>
+  {% else %}
+      <p>No private messages.</p>
+  {% endif %}
+</div>
+
+  
+   
+
+
+<!-- MAIN -->
+
+<main style="background-color:rgb(244, 234, 234); padding-top: 40px;">
+  <div class="container">
+      <div class="left">
+        {% if user.is_authenticated %}
+
+         <a class="profile" href="{% url 'show_profile_page' user.profile.id %}" style="text-decoration: none;">
+          <div class="profile-photo" style="cursor:pointer;">
+          <img src="{{user_profile.profileimg.url}}" alt="profile-1">
+          </div>
+          <div class="handle">
+              <h4 style="text-decoration: none;">{{user_profile.fname}}</h4>
+              <p class="text-muted">
+                {{user_profile.username}}
+              </p>
+          </div>
+         </a>
+  
+         {% endif %}
+         <!-- sidebar -->
+         <div class="sidebar">
+          <a class="menu-item active" href="{% url 'home' %}" style="text-decoration: none;">
+              <span><i class="uil uil-home"></i></span><h3>Home</h3>
+          </a>
+
+
+        
+
+
+          <!-- Exemple de menu déroulant pour les liens "Add Post" et "Add Recommendation" -->
+<!--<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="background-color:rgb(107,76,230)">
+    Add Post
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+   
+    <li><a class="dropdown-item" href="{% url 'add_recommondation' %}">Recommendation</a></li>
+    <li><a class="dropdown-item" href="{% url 'add_transport' %}"> Transport</a></li>
+    <li><a class="dropdown-item" href="{% url 'add_logement' %}"> Logement</a></li>
+    
+    <li><a class="dropdown-item" href="{% url 'add_evenement' %}"> Event</a></li>
+    <li><a class="dropdown-item" href="{% url 'add_eventSocial' %}"> EventSocial</a></li>
+    <li><a class="dropdown-item" href="{% url 'add_eventClub' %}"> EventClub</a></li>
+    <li><a class="dropdown-item" href="{% url 'add_stage' %}"> stage</a></li>
+  </ul>
+
+  
+</div>-->
+
+
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="background-color:rgb(107,76,230)">
+     Post
+  </button>
+ 
+</div>
+<br>
+
+
+
+              
+              <a class="menu-item" href="{% url 'edit_profile_page' user.profile.id %}" style="text-decoration: none;">
+              <span><i class="uil uil-edit"></i></span>
+              <h3>Edit Profile</h3>
+              </a>
+
+              
+              <a class="menu-item" href="{% url 'show_profile_page' user.profile.id %}" style="text-decoration: none;">
+              <span><i class="uil uil-bookmark"></i></span><h3>Profile</h3>
+
+              </a>
+
+              <a class="menu-item" href="/password" style="text-decoration: none;">
+                <span><i class="uil uil-lock"></i></span><h3>Change Password</h3>
+                </a>
+         </div>
+         <!-- end of sidebar -->
+         <button class="btn btn-primary">
+            <a href="{% url 'create_post_and_stage' %}" style="color: #fff;text-decoration: none;">Create Post</a>
+         </button>
+      </div>
+      <!-- END OF LEFT -->
+
+      <div class="middle">
+          <!-- FEED -->
+          <div class="feeds">
+              <!-- FEED 1 -->
+              {% if count_posts == 0  %}
+              <div class="alert alert-primary custom-alert" role="alert">
+                <h4 class="alert-heading">Aucun Posts disponible</h4>
+                <p>Désolé, il n'y a actuellement aucun  posts disponible.</p>
+                <hr>
+                <p class="mb-0">Veuillez vérifier plus tard pour de nouvelles annonces.</p>
+            </div>
+            <div class="empty-state__icon">
+                <img src="{% static 'images/home/post.png' %}" alt="" class="custom-image">
+            </div>
+              {% else %}
+              {% for post in all_posts reversed %}
+              
+              <div class="feed">
+                  <div class="head">
+                      <div class="user">
+                          <div class="profile-photo">
+                            <a href="{% url 'show_profile_page' post.profileid %}">
+                              <img src="{{ post.get_owner_pp }}" alt="profile-13" style="width:50px;">
+                            </a>
+                            
+                           
+                          </div>
+                          <div class="ingo">
+                            {% if post.evenement %}
+                              {% if post.evenement.available_seats > 0 %}
+                                  <!-- Afficher le bouton de réservation -->
+                                  <form method="POST" action="{% url 'add_reservation' post.evenement.id %}">
+
+                                      {% csrf_token %}
+                                      <button type="submit" >
+
+                                        <img src="{% static 'images/home/l.png' %}"  class="btn-reserver" style="margin-left: 520px;width:50px;">
+                                      </button>
+                                  
+                                      
+                                  </form>
+                              {% else %}
+                                  <!-- Afficher un message si la réservation est pleine -->
+                                  <p><img src="{% static 'images/home/C.png' %}"  class="btn-reserver" style="margin-left: 520px;width:50px;"></p>
+                              {% endif %}
+                          {% endif %}
+
+
+
+
+                          {% if post.transport %}
+                          {% if post.transport.available_seats > 0 %}
+                              <!-- Afficher le bouton de réservation -->
+                              <form method="POST" action="{% url 'add_reservationt' post.transport.id %}">
+
+
+                                  {% csrf_token %}
+                                  <button type="submit" >
+
+                                    <img src="{% static 'images/home/l.png' %}"  class="btn-reserver" style="margin-left: 520px;width:50px;">
+                                  </button>
+                              
+                                  
+                              </form>
+                          {% else %}
+                              <!-- Afficher un message si la réservation est pleine -->
+                              <p><img src="{% static 'images/home/C.png' %}"  class="btn-reserver" style="margin-left: 470px;width:90px;height: 60px;"></p>
+                          {% endif %}
+                      {% endif %}
+
+
+
+
+                      
+                      {% if post.logement %}
+                      {% if post.logement.available_seats > 0 %}
+                          <!-- Afficher le bouton de réservation -->
+                          <form method="POST" action="{% url 'add_reservationl' post.logement.id %}">
+
+
+                              {% csrf_token %}
+                              <button type="submit" >
+
+                                <img src="{% static 'images/home/l.png' %}"  class="btn-reserver" style="margin-left: 520px;width:50px;">
+                              </button>
+                          
+                              
+                          </form>
+                      {% else %}
+                          <!-- Afficher un message si la réservation est pleine -->
+                          <p><img src="{% static 'images/home/C.png' %}"  class="btn-reserver" style="margin-left: 470px;width:90px;height: 60px;"></p>
+                      {% endif %}
+                  {% endif %}
+
+
+
+                  {% if post.stage %}
+                  {% if post.stage.available_seats > 0 %}
+                      <!-- Afficher le bouton de réservation -->
+                      <form method="POST" action="{% url 'add_reservations' post.stage.id %}">
+
+
+                          {% csrf_token %}
+                          <button type="submit" >
+
+                            <img src="{% static 'images/home/l.png' %}"  class="btn-reserver" style="margin-left: 520px;width:50px;">
+                          </button>
+                      
+                          
+                      </form>
+                  {% else %}
+                      <!-- Afficher un message si la réservation est pleine -->
+                      <p><img src="{% static 'images/home/C.png' %}"  class="btn-reserver" style="margin-left: 470px;width:90px;height: 60px;"></p>
+                  {% endif %}
+              {% endif %}
+
+
+
+                              <h3>{{ post.author }}</h3>
+                              
+                            <p>{{post.post_date}}</p>
+                          
+                              <b>{{ post.type }}</b>
+                              
+                              
+                              
+                            
+
+
+
+
+
+
+
+                          </div>
+                          
+                      </div>
+
+                      
+
+                      <span class="edit">
+                          <!--<i class="uil uil-ellipsis-h"> 
+                            <ul>
+                                <li> 
+                                  <!-- Edit post -->
+                                  <!--{% if user.is_authenticated %} 
+                                  {% if user.id == post.author.id %}
+                                  <a href="{% url 'update_post' post.pk %}" class="pencil-icon"><i class="fa-solid fa-pencil"></i></a>
+                                   &nbsp;&nbsp;
+                                  <!-- Delete post -->
+                                  <!--<a href="{% url 'delete_post' post.pk %}" class="delete-icon"><i class="fa-solid fa-trash-arrow-up"></i></a> 
+                                  {% endif %}
+                                  {% endif %}
+                              </li>-->
+                            </ul>
+                          </i> 
+                        
+
+                          {% if post.author.user == request.user %}
+                          <form action="{% url 'delete_post' post.id %}" method="post">
+                              {% csrf_token %}
+                              <button type="submit" style="width:50px;height: 46px;" >
+                                
+                                
+                                
+                                <i class="fa-solid fa-trash-arrow-up" class="delete-icon"></i>
+                              
+                              
+                              
+                              </button>
+                              
+                          </form>
+                         
+                      {% endif %}
+                      
+                      </span>
+
+                  </div>
+                  <div class="photo">
+                    <a href="{{ post.image.url }}">
+                      <img src="{{ post.image.url }}" alt="feed-1" style="height: 450px;">
+                    </a>
+                  </div>
+                  <div class="action-buttons">
+                      <div class="interaction-buttons">
+                        <!-- Like post -->
+                             <a href="/like-post?post_id={{post.id}}" style="text-decoration: none;">
+                              <i class="fa-solid fa-heart" id="heart" ></i>  
+                            </a>
+                            <a href="{% url 'add_comment' post.pk %}" style="color: #000;">
+                                  <span><i class="uil uil-comment-dots"></i></span>
+                            </a>
+
+                      </div>
+
+                         <!-- Downloading th post-img -->
+                         <a href="{{post.image.url}}" class="flex items-center space-x-2 flex-1 justify-end" style="text-decoration: none;" download>
+                          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="25" height="25" preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16"><g fill="currentColor"><path d="M8.5 1.5A1.5 1.5 0 0 1 10 0h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h6c-.314.418-.5.937-.5 1.5v6h-2a.5.5 0 0 0-.354.854l2.5 2.5a.5.5 0 0 0 .708 0l2.5-2.5A.5.5 0 0 0 10.5 7.5h-2v-6z"/></g></svg> 
+                        </a>
+                  </div>
+
+                <!-- Like section -->
+                  <div class="liked-by">
+                    {% if post.no_of_likes == 0 %}
+                    <p><b>No Likes</b></p>
+                    {% else %}
+                      <p><b>Liked by {{post.no_of_likes}} person</b></p>
+                    {% endif %}
+                  </div>
+      
+                  {% with stage_details=post.get_stage_details %}
+                  {% if stage_details %}
+                      
+                      <p><strong>Societe:</strong> {{ stage_details.societe }}</p>
+                      <p><strong>Type:</strong> {{ stage_details.type_stage }}</p>
+                      <p><strong>Sujet:</strong> {{ stage_details.sujet }}</p>
+                      <p><strong>Contact Info:</strong> {{ stage_details.contact_info }}</p>
+                      <p><strong>Specialiste:</strong> {{ stage_details.specialiste }}</p>
+                  {% endif %}
+              {% endwith %}
+              
+            
+              {% with logement_details=post.get_logement_details%}
+              {% if logement_details %}  <!-- Vérifiez si le post a un logement associé -->
+              <!-- Afficher les détails du logement -->
+              <div class="logement-details">
+                  <p>{{ post.title }}</p>
+                  <p><strong>Localisation:</strong> {{logement_details.localisation }}</p>
+                  <p><strong>Description:</strong> {{logement_details.description }}</p>
+                  <p><strong>Contact Info:</strong> {{ logement_details.contact_info }}</p>
+                  <p><strong>capacity:</strong>{{ logement_details.capacity }}</p>
+              </div>
+          {% endif %}
+          {% endwith %}
+
+
+          {% with evenement_details=post.get_evenement_details %}
+
+
+
+          
+          {% if evenement_details %}
+             
+              <p><strong>Intitule:</strong>{{ evenement_details.intitule }}</p>
+              <p><strong>Description:</strong> {{ evenement_details.description }}</p>
+              <p><strong>Lieu: </strong>{{ evenement_details.lieu }}</p>
+              <p><strong>contact_info: </strong>{{ evenement_details.contact_info }}</p>
+              <p><strong>capacity:</strong>{{ evenement_details.capacity }}</p>
+          
+              
+              <!-- Ajoutez d'autres champs d'événement selon vos besoins -->
+          {% endif %}
+      {% endwith %}
+
+
+      {% with transport_details=post.get_transport_details %}
+      {% if transport_details %}
+          
+          <p><strong>Depart:</strong> {{ transport_details.depart }}</p>
+          <p><strong>Destination:</strong> {{ transport_details.destination }}</p>
+          <p><strong>Heure de départ:</strong> {{ transport_details.heure_depart }}</p>
+         <p><strong>nombre_sieges :</strong>{{ transport_details..nombre_sieges }}</p>
+         <p><strong>contact_info :</strong>{{ transport_details..contact_info }}</p>
+         <p><strong>capacity :</strong>{{ transport_details.capacity }}</p>
+        
+      
+         
+      {% endif %}
+  {% endwith %}
+
+
+
+                  <div class="caption">
+                      <p> {{ post.caption|safe }}</p>
+                  </div>
+
+              
+<a data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="cursor: pointer;">
+  View all comments
+</a>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Comments</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        {% if not post.comments.all %}
+        No Comments yet.. <a href="{% url 'add_comment' post.pk %}" >Add Comment</a>
+         {% else %}
+        {% for comment in post.comments.all %}
+  
+          
+        
+        
+  
+        
+          <strong>{{ comment.date_added|date:"l, d F Y" }}</strong>--
+        <strong style="margin-bottom: -100px;">{{ comment.name }}</strong>
+        <br/>
+        {{ comment.body|safe }}
+        <br/>
+
+
+        
+        <hr>
+        {% endfor %} 
+        {% endif %}
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+{% endfor %}
+{% endif %}
+
+</div>
+</div>
+<div class="right">
+
+
+      <div class="friend-requests">
+        
+          <h4 style="color:rgb(107,76,230)">User Suggestions</h4>
+          <br>
+          <div class="request">
+            <div class="search-icon" style="float: right;">
+              <!-- Icône de recherche -->
+              <i class="uil uil-search" id="search-icon" style="cursor: pointer;"></i>
+          </div>
+          <form action="/search" method="POST" class="search-bar" id="search-form" style="display: none;margin-top: -17px;">
+              {% csrf_token %}
+              <div class="search-bar" >
+                  <!-- Barre de recherche -->
+                  <input type="search" placeholder="Search for other users" name="username" id="search-input" >
+                  <button type="submit"> </button>
+              </div>
+          </form>
+          <br>
+          
+              <div class="ingo">
+                {% for user in suggestion_users %}
+                  <div class="profile-photo">
+                    <a href="{% url 'show_profile_page' user.id %}">
+                      <img src="{{ user.profileimg.url }}">
+                    </a>
+                  </div>
+                  <div>
+                      <h5>{{user.fname}} {{user.lname}}</h5>
+                      <p class="text-muted">
+                            {{user.description}} 
+                      </p>
+
+
+                      <!--<form action="{% url 'delete_user' user.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Supprimer</button>
+          </form>-->
+                      
+                      </div>
+                  
+                  <hr>
+                  {% endfor %}
+                  </div>
+         </div>
+      </div>
+    </div>
+  </div>
+</main>
+</div>
+
+<script type="text/javascript">
+
+ (function() {
+  const heart = document.getElementById('heart');
+  heart.addEventListener('click', function() {
+    heart.classList.toggle('red');
+  });
+})();
+
+</script>
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+      const searchIcon = document.getElementById("search-icon");
+      const searchBar = document.getElementById("search-form");
+
+      searchIcon.addEventListener("click", function() {
+          // Vérifier si la barre de recherche est actuellement visible
+          const isVisible = getComputedStyle(searchBar).display !== "none";
+
+          // Inverser la visibilité de la barre de recherche en fonction de son état actuel
+          searchBar.style.display = isVisible ? "none" : "block";
+      });
+  });
+</script>
+
+
+
+<script>
+  document.getElementById('showMessages').addEventListener('click', function() {
+      var messagesDiv = document.getElementById('privateMessages');
+      if (messagesDiv.style.display === 'none') {
+          messagesDiv.style.display = 'block';
+      } else {
+          messagesDiv.style.display = 'none';
+      }
+  });
+</script>
+
+
+{% endblock %}

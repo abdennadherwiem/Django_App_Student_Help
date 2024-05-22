@@ -1,0 +1,63 @@
+{% block content %}
+<style>
+    /* Center-align the list */
+    ul {
+        text-align: center;
+        list-style-type: none; /* Remove default list styling */
+        padding: 0;
+    }
+
+    /* Style each message item */
+    li {
+        border: 1px solid #007bff; /* Blue border */
+        background-color: #f0faff; /* Light blue background */
+        border-radius: 10px;
+        padding: 15px;
+        margin: 15px 0;
+        width: 60%; /* Adjust the width as needed */
+        margin: auto; /* Center-align the list item */
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Add a shadow */
+        transition: box-shadow 0.3s ease; /* Add a transition for smoother effect */
+    }
+
+    /* On hover, increase the shadow and change background color */
+    li:hover {
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        background-color: #d4e9ff; /* Lighter blue background on hover */
+    }
+
+    /* Style the strong elements */
+    li strong {
+        color: #004085; /* Dark blue color for strong elements */
+    }
+
+    /* Style the header */
+    h1 {
+        text-align: center;
+        color: #007bff; /* Blue color for the header */
+        margin-bottom: 20px;
+    }
+
+    /* Style the "No messages found" paragraph */
+    p {
+        text-align: center;
+        color: #007bff; /* Blue color for the paragraph */
+    }
+</style>
+
+<h1>Private Messages</h1>
+{% if messages %}
+    <ul>
+        {% for message in messages %}
+            <li>
+                <strong>From:</strong> {{ message.sender }}<br>
+                <strong>Message:</strong> {{ message.message }}<br>
+                <strong>Sent:</strong> {{ message.timestamp }}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No private messages found.</p>
+{% endif %}
+{% endblock %}
+

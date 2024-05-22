@@ -1,0 +1,257 @@
+<!-- {% extends 'main.html' %} -->
+{% load static %} 
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'styles/home.scss' %}" />
+
+<!-- Icons -->
+<link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css">
+
+ <!-- Font-awesome -->
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+ <style>
+  
+  #heart.red {
+    color: red;
+  }
+
+  
+
+
+
+
+    .recommendation-feed ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .recommendation-feed li {
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        padding: 20px;
+    }
+
+    .recommendation-feed li strong {
+        font-weight: bold;
+    }
+
+    .recommendation-feed li img {
+        max-width: 100%;
+        height: auto;
+        margin-top: 10px;
+    }
+
+
+    
+.custom-alert {
+            position: fixed; /* Position fixée pour rester en haut de la page */
+            top: 0;
+            left: 0;
+            width: 100%; /* Prend toute la largeur de la page */
+            z-index: 1000; /* Assurez-vous que l'alerte soit au-dessus de tout autre contenu */
+            background-color: #6a0dad; /* Couleur de fond mauve */
+            color: #fff; /* Couleur du texte blanc */
+            padding: 20px; /* Espacement interne */
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5); /* Ombre 3D */
+            transition: transform 0.3s ease; /* Transition pour l'effet hover */
+        }
+
+        .custom-alert:hover {
+            transform: translateY(-5px); /* Légère translation vers le haut au survol */
+        }
+
+        .custom-alert hr {
+            border-top-color: #fff; /* Couleur de la ligne de séparation */
+        }
+        
+       .custom-image{
+        width: 100%;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    height: 550px;
+
+        }
+        .custom-li:hover {
+      transform: translateY(-5px);
+    transition: transform 0.5s ease;/* Rotation de 180 degrés lors du survol */
+    }
+</style>
+
+ </style>
+
+{% endblock %}
+
+<!-- Title -->
+{% block title %}
+<title>Dashboard</title>
+{% endblock %}
+
+{% block content %} 
+<nav>
+  <div class="container">
+    <div class="log">
+        <img src="{% static 'images/home/iset_logo.png' %}" style="height:75px;cursor:pointer;">
+    </div>
+
+    <!-- Search bar -->
+    <form  method="GET">
+      {% csrf_token %}
+      <div class="search-bar">
+          <input type="search" placeholder="Search for other EventSocials" name="w">
+          <input type="number" placeholder="Prixmin" name="prix_min">
+           <input type="number" placeholder="Prixmax" name="prix_max">
+          <button type="submit"><i class="uil uil-search"></i> </button> 
+      </div>
+      </form>
+
+
+
+
+
+      <div class="create">
+        {% if user.is_authenticated %}
+        <a href="{% url 'logout' %}">logout</a>
+        {% else %}
+       <a href="{% url 'signup' %}">Signup</a>
+      <a href="{% url 'login' %}">Login</a>
+       {% endif %}
+         <button class="btn btn-primary">
+            <a href="{% url 'add_post' %}" style="color: #fff;text-decoration: none;">Create Post</a>
+         </button>
+         
+      </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+
+<main style="background-color:rgb(244, 234, 234); padding-top: 40px;">
+  <div class="container">
+      <div class="left">
+        {% if user.is_authenticated %}
+
+         
+  
+         {% endif %}
+         <!-- sidebar -->
+         <div class="sidebar">
+          <a class="menu-item active" href="{% url 'home' %}" style="text-decoration: none;">
+              <span><i class="uil uil-home"></i></span><h3>Home</h3>
+          </a>
+         
+
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="background-color:rgb(107,76,230)">
+              Add Post
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+             
+              <li><a class="dropdown-item" href="{% url 'add_recommondation' %}">Recommendation</a></li>
+              <li><a class="dropdown-item" href="{% url 'add_transport' %}"> Transport</a></li>
+              <li><a class="dropdown-item" href="{% url 'add_logement' %}"> Logement</a></li>
+             
+              <li><a class="dropdown-item" href="{% url 'add_evenement' %}"> Event</a></li>
+              <li><a class="dropdown-item" href="{% url 'add_eventSocial' %}"> EventSocial</a></li>
+              <li><a class="dropdown-item" href="{% url 'add_eventClub' %}"> EventClub</a></li>
+            </ul>
+          
+            
+          </div>
+          
+          
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="background-color:rgb(107,76,230)">
+              Views Post
+            </button>
+            <ul class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownMenuButton" >
+              <li><a class="dropdown-item" href="{% url 'recommandations_list' %}"> Posts Recommondations</a></li>
+              <li><a class="dropdown-item" href="{% url 'transport_list' %}">Posts Transports</a></li>
+              <li><a class="dropdown-item" href="{% url 'logement_list' %}">Posts Logement</a></li>
+            
+              <li><a class="dropdown-item" href="{% url 'evenement_list' %}">Posts Events</a></li>
+              <li><a class="dropdown-item" href="{% url 'eventSocial_list' %}">Posts EventsSocial</a></li>
+              <li><a class="dropdown-item" href="{% url 'eventClub_list' %}">Posts EventsClub</a></li>
+            </ul>
+          </div>
+          <br>
+              
+              <a class="menu-item" href="{% url 'edit_profile_page' user.profile.id %}" style="text-decoration: none;">
+              <span><i class="uil uil-edit"></i></span>
+              <h3>Edit Profile</h3>
+              </a>
+
+              
+              <a class="menu-item" href="{% url 'show_profile_page' user.profile.id %}" style="text-decoration: none;">
+              <span><i class="uil uil-bookmark"></i></span><h3>Profile</h3>
+              </a>
+
+              <a class="menu-item" href="/password" style="text-decoration: none;">
+                <span><i class="uil uil-lock"></i></span><h3>Change Password</h3>
+                </a>
+         </div>
+         <!-- end of sidebar -->
+         <button class="btn btn-primary">
+            <a href="{% url 'add_eventSocial' %}" style="color: #fff;text-decoration: none;">Create EventSocial</a>
+         </button>
+      </div>
+      <!-- END OF LEFT -->
+
+      
+          <!-- FEED -->
+
+
+
+          
+          <div class="recommendation-feed">
+                      {% if eventSocials %}
+                      <ul>
+                          {% for event in eventSocials %}
+                          <li class="custom-li">
+                              <img class="recommandation-image" src="{{ event.evenement.post.image.url }}" alt="Image du post" >
+                              <strong>Prix Event :</strong> {{ event.prix }} DT<br>
+                              <strong>Intitulé:</strong> {{ event.evenement.intitule}}<br>
+                              <strong>Lieu:</strong> {{ event.evenement.lieu}}<br>
+                              <strong>contact_Info:</strong> {{ event.evenement.contact_info}}<br>
+                              
+                             
+                          </li>
+                          {% endfor %}
+                      </ul>
+                      {% else %}
+                      <div class="alert alert-primary custom-alert" role="alert">
+                          <h4 class="alert-heading">Aucun événement social disponible</h4>
+                          <p>Désolé, il n'y a actuellement aucun événement social disponible.</p>
+                          <hr>
+                          <p class="mb-0">Veuillez vérifier plus tard pour de nouvelles annonces.</p>
+                      </div>
+                      <div class="empty-state__icon">
+                          <img src="{% static 'images/home/post.png' %}" alt="" class="custom-image">
+                      </div>
+                      {% endif %}
+                  </div>
+          
+        
+    
+
+
+             
+
+
+  </>
+</main>
+</div>
+
+<script type="text/javascript">
+
+ (function() {
+  const heart = document.getElementById('heart');
+  heart.addEventListener('click', function() {
+    heart.classList.toggle('red');
+  });
+})();
+
+</script>
+{% endblock %}

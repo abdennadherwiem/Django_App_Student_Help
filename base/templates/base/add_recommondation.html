@@ -1,0 +1,94 @@
+{% extends 'main.html' %}
+{% load static %} 
+
+{% block styles %}
+
+<style>
+    body {
+        background-image: url('/static/images/graph.webp');
+        background-size: cover;
+        background-position: center;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        width: 100%;
+    max-width: 870px; /* Augmenter la largeur maximale du formulaire */
+    margin: 50px auto;
+    padding: 30px;
+    height:70%;
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    position: relative;
+    background-color: rgba(255, 255, 255, 0); /* Arrière-plan totalement transparent */
+    margin-left: 270px;
+}
+
+    .form-title {
+    text-align: center;
+    color: #9a35dd;
+    margin-bottom: 20px;
+    font-weight: bold; /* Mettre en gras */
+}
+
+
+    label {
+        display: block;
+        margin-bottom: 10px;
+        color: #333333;
+        font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="file"],
+    textarea {
+        width: calc(100% - 20px);
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+
+
+
+    button {
+            background: linear-gradient(to right, #9a35dd, #623dc6);
+            color: #ffffff;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #4c0672;
+        }
+</style>
+{% endblock %}
+
+<title>Add Recommondation</title>
+
+{% block content %}
+{% if user.is_authenticated %}
+   
+    <div class="container shadow p-3 mb-5" style="width: 53%;background-color: rgba(255, 255, 255, 0);">
+        <h1 class="form-title">Add Recommondation</h1>
+        <br>
+        <div class="form-group">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.media }}
+                {{ form.as_p }}
+                <br>
+                <button type="submit">Ajouter</button>
+            </form>
+        </div>
+    </div>
+    <br/><br/>
+{% endif %}
+{% endblock %}

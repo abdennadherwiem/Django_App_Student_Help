@@ -1,0 +1,177 @@
+
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter un transport</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('/static/images/graph.webp');
+            background-size: cover; /* Pour couvrir tout l'écran */
+            background-position: center; /* Pour centrer l'image */
+            text-align: center;
+            padding-top: 50px;
+        }
+        h1 {
+            color: #9a35dd;
+            font-size: 36px;
+            margin-bottom: 30px;
+        }
+        form {
+            background-color: rgba(255, 255, 255, 0);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            width: 900px;
+            max-width: 90%;
+            margin: 0 auto; /* Center horizontally */
+            position: relative; /* Permet de positionner l'image par rapport au formulaire */
+        }
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: bold;
+        }
+        input[type="text"],
+        textarea,
+        select {
+            width: calc(100% - 22px); /* Largeur ajustée pour compenser la bordure */
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button {
+            background: linear-gradient(to right, #9a35dd, #623dc6);
+            color: #ffffff;
+            padding: 12px 80px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 50px;
+            width: 200px;
+        }
+        button:hover {
+            background-color: #4c0672;
+        }
+        .form-image {
+            position: absolute; /* Position absolue par rapport au formulaire */
+            top: 0;
+            right: 0;
+            width: 200px; /* Taille de l'image */
+            height: auto;
+            border-radius: 0 8px 8px 0; /* Coins arrondis seulement à droite */
+            box-shadow: -5px 0 10px rgba(0, 0, 0, 0.1); /* Ombre à gauche de l'image */
+
+
+        }
+
+        input[type="number"] {
+        width: calc(100% - 22px); /* Largeur ajustée pour compenser la bordure */
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+    </style>
+</head>
+<body>
+   
+    {% if user.is_authenticated %}
+   
+   
+        <h1 class="form-title">Add Post</h1>
+        <br>
+        <div class="form-group">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.media }}
+                {{ form.as_p }}
+                <br>
+               
+                <div class="dropdown">
+                    <button class="btn btn-primary btn-block form-button">Post</button>
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="background-color:rgb(107,76,230)">
+                      Type Post
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                     
+                      <li><a class="dropdown-item" href="{% url 'add_recommondation' %}">Recommendation</a></li>
+                      <li><a class="dropdown-item" href="{% url 'add_transport' %}"> Transport</a></li>
+                      <li><a class="dropdown-item" href="{% url 'add_logement' %}"> Logement</a></li>
+                      
+                      <li><a class="dropdown-item" href="{% url 'add_evenement' %}"> Event</a></li>
+                      <li><a class="dropdown-item" href="{% url 'add_eventSocial' %}"> EventSocial</a></li>
+                      <li><a class="dropdown-item" href="{% url 'add_eventClub' %}"> EventClub</a></li>
+                      <li><a class="dropdown-item" href="{% url 'add_stage' %}"> stage</a></li>
+                    </ul>
+                  
+                    
+                  </div>
+                  
+                  
+            </form>
+        </div>
+       
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    document.querySelector('#post-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Empêcher le rechargement de la page
+
+        // Envoyer une requête fetch vers l'URL du formulaire
+        fetch(this.action, {
+            method: 'POST',
+            body: new FormData(this),
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest' // Ajouter l'en-tête X-Requested-With pour indiquer une requête AJAX
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Créer un nouvel élément li pour le nouveau post
+                const newPostItem = document.createElement('li');
+                newPostItem.textContent = data.post_content;
+
+                // Ajouter le nouvel élément à la liste des posts
+                const postList = document.querySelector('#post-list');
+                postList.appendChild(newPostItem);
+
+                // Effacer le formulaire ou masquer le modal si nécessaire
+                document.querySelector('#post-form').reset(); // Réinitialiser le formulaire
+            } else {
+                // Gérer les erreurs
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            alert('Error: Unable to add post.');
+        });
+    });
+});
+
+    </script>
+    <br/><br/>
+
+</body>
+</html>
+{% endif %}
+
+{% endblock %}
+
